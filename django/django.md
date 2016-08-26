@@ -130,3 +130,34 @@ https://docs.djangoproject.com/en/1.7/ref/class-based-views/
 로그 레코드가 로거에서 핸들러로 넘겨질 때, 필터를 사용해서 로그 레코드에 추가적인 제어를 할 수 있다.
 일반적으로 로그레벨에 따라 로그 레코드가 처리 되는데 필터를 이용하면 이에 추가하여 로그 레코드의 처리 기준을 추가 할 수 있다.
 예를 들어, 에러 이상의 로그 레코드 중에서도 특정 소스로 부터 오는 로그 레코드만 처리한다는등의 제어를 할 수 있다.
+
+
+HTML에서의 함수사용
+HTML폼에서도 파이썬의 함수를 사용할 수 있는데 클래스 함수는 {% ~ %}의 꼴로 사용하고 객체함수는 {{ ~.~ }} 처럼 괄호2개사이안에 객체.함수의 꼴로 나타낸다
+변수하나를 가져와 그 값을 사용할 때도 괄호2개를 쓰는것 같다??
+|는 HTML에서 |앞에 있는 텍스트에 함수처리를 할때 사용하는것 같다
+예를들어 "books:"|add:modelname|lower라고 하면
+books:에 modelname이 더해지고 그 modelname을 소문자처리하라고 써있으므로
+books:소문자인modelname의 꼴이 될 것이다.
+
+
+Url
+template에서 {% url %}을 통하여 링크를 걸 때 'books:index'처럼 템플릿폴더:템플릿이름
+이러한 형식으로 url을 걸 때 urls.py에서 name으로 지정했던 템플릿의 이름과 url의 주소 값으로 준 템플릿이름과 일치해야 한다
+urls에 url의 name으로 주지않은 이름을 템플릿이름으로 입력했다면 제대로 링크가 되지 않으면서 오류가 발생한다.
+예를 들어 위에 처럼 books:index 로 url을 걸었다면 template의 books폴더 안에 해당 파일이 있어야 하고 urls에 해당 url을 가르키고 있는 name이 있어야 한다
+url을 이용할 때 '~'처럼 ''안에 경로를 입력하고 나서 추가로 입력하는 것은 url로 연결할 때 urls에서 해당 url에 대해서 변수를 담고 있다면 그 변수를 입력해주는것이다.
+예를 들어 {% url 'books:book_detail' book.id %} 처럼 url 함수를 처리할때 template밑에 books폴더에 있는 book_detail템플릿에 book.id 주소, 즉 book_detail/book.id 로 연결시켜주는 것이다.
+
+
+
+변수
+Model에 지정한 클래스 안에 입력된 변수를 사용하기 위해서는 스펠링이 정확해야 한다.
+s를 더 쓴다거나 빼먹는다거나 해서 모델에서는 Book 클래스 밑에 authors라고 지정해놓고 template이나 view에서 Book.author라고 쓴다면 모델에 지정된 변수가 아니기 때문에 제대로 나타나지 않는다
+
+
+Template의 URL
+Template을  참조할 URL을 지정할 때는 setting.py에서 중간에 TEMPLATES로 묶여있는 부분에 DIRS가 있는데 그 DIRS를 자신이 template을 먼저 참조 할 폴더를 지정해주면 템플릿을 찾을 때 항상 그 주소를 먼저 참조하게 된다.
+이 폴더안에 있는 템플릿은 "base.html"처럼 경로 없이 바로 사용 할 수 있다.
+해당 디렉토리가 아닌 다른 템플릿에 링크를 걸거나 템플릿을 상속하기 위해서는 
+/polls/{{question.id}}/ 처럼 하드 코딩을 해야한다 
