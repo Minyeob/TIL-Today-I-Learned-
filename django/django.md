@@ -50,6 +50,23 @@ def fbview(request):
 
 이거는 서버를 구현 할때 클라이언트가 data에 대해 요청을 한다면 dictionary형태로 구현되어 있는 data를 json형태로 바꿔 http형태로 response 해 줄 수 있다.
 
+http에 있는 내용을 가져올때는 여러가지 방법이 있다.
+requests패키지를 import해 requests.get('http://~~~')도 하나의 방법이다
+이 방법을 이용하면 해당 http에 있는 json내용을 가져올 수 있다.
+하지만 이 방법으로 가져온 json 객체는 read함수를 가지고 있지 않아 json.loads를 통해 dictionary형태로 바꿀 수가 없다.
+json.loads는 string이나 buffer의 형태를 필요로 하는데 requests.get을 이용해 가져온 json객체는 하나의 object로 인식 되어 할 수 없는것 같다.
+
+따라서 json파일을 가져와 dictionary형태로 바꾸어 그 안의 내용을 참조하기 위해서는 다른 방법이 필요하다
+이것을 해결할 방법으로는 urllib2 패키지를 import해 urlopen함수를 이용하는 방법이 있다.
+먼저 url = "~"의 형태로 http주소를 string화 시켜 변수로 저장하고
+page = urllib2.urlopen(url)의 형태로 원하는 http주소의 page를 가져올 수 있다.
+urlopen함수는 read()를 포함하고 있다.
+따라서 json.loads(page.read())를 하면 목표로 했던 json파일을 가져와 read()로 읽어 스트링화 시킨 뒤 json.loads를 통해 dictionary의 형태로 바꿀 수 있다.
+dictionary화 시킨 뒤 자신이 원하는 내용을 가져다가 사용할 수 있다.
+json형태에서는 dictionary처럼 검색을 할 수 없는것 같다
+따라서 dictionary형태로 바꾸는것이 필요하다
+
+ 
 
 template
 템플릿을 상속하면 템플릿 전체의 모습을 구조화할 수 있어 코드의 재사용이나 변경이 용이하고, 사이트 UI의 룩앤필을 일관되게 가져갈 수 있다.
@@ -166,3 +183,13 @@ Template을  참조할 URL을 지정할 때는 setting.py에서 중간에 TEMPLATES로 묶여있는 
 단축키
 ctrl + A 를 하면 해당 문서의 전체블록이 선택된다
 한번에 모든 문장을 Tab한다거나 지우고 싶을 때 편하게 사용할 수 있다
+
+
+dictionary
+dictionary형태에서 자신이 원하는 값을 찾기 위해서는 ["~"]를 이용한다
+예를 들어 dictionary형태로 저장된 Kim이라는 사람의 데이터가 있다고 하자.
+이사람의 출신 초등학교를 알기 위해서는
+Kim["school"]["elementary"] 의 형태로 값을 받아오면 된다
+
+
+
