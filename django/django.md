@@ -193,3 +193,10 @@ Kim["school"]["elementary"] 의 형태로 값을 받아오면 된다
 
 
 
+Model
+models.py에 모델의필드들을 정하고 생성할 때 맞는 필드를 주고 ()을 같이 넣어줘야 admin에서 데이터를 생성할 수 있다.
+예를 들어 pub_date = models.datetimefield 처럼 ()없이 만든다면 admin에서 해당 값이 보이지 않는다. 따라서 쟝고내에서 값을 만들어줘야 한다.
+모델을 다 만들고 admin.py에도 해당 모델을 register해줘야 admin 페이지에서 모델을 확인하고 수정할 수 있다.
+
+
+
