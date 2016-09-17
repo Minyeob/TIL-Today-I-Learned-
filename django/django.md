@@ -243,3 +243,29 @@ filter를 이용해 구할 경우 type을 확인해보면 queryset으로 나오�
 따라서 둘을 비교하면 무조건 다르다는 결과만 출력하므로 서로 같은지 확인하기 위해서는
 두 데이터 타입이 같은 상태에서 비교해야 두 데이터가 같은지 비교 가능하다.
 
+
+###여러개의 데이터를 가지는 자료형비교
+여러개의 데이터를 가지고있는 자료형으로 list, tuple, dictionary 등이 있다.
+list는 a = [] 의 형태로 []괄호로 이루어져있고 tuple은 b = (2, 3)처럼 ()괄호안에 여러개의 데이터가 담겨있다.
+dictionary는 key와 value로 이루어져있는데 c={ 'int':1 } 처럼 {}괄호로 이루어져있고 안에 hash처럼 key와 해당하는 value로 이루어져있어
+찾을때 c['int']처럼 key값을 통해 검색을 하면 해당 key에 해당하는 value를 구할 수 있다.
+
+
+###쟝고 Form 클래스
+쟝고에서는 html에서 form을 컨트롤할 필요없이 Formview클래스와 forms.Form클래스를 상속해 쟝고내에서 폼을 만들고 컨트롤 가능하다
+템플릿에서 form을 만들어서 그 폼 데이터를 받아서 view에서 처리할 필요없이 view에서 Formview를 상속받고 화면에 보여질 template_name과
+성공했을때 보여질 success_url, 그리고 template서 form처리를 안하는 대신 화면에 보여줄 form_class를 입력해주면 폼 처리가 된 template이 화면에 보여진다.
+쟝고에서 폼을 만들때는 from django import forms를 해서 forms를 상속한 forms.py를 만들고 forms.Form을 상속한 class를 만든 뒤 그 클래스내에서
+forms.IntegerField나 forms.ChoiceField같이 forms 내에 있는 필드를 이용 해 폼 처리를 하고 싶은 내용을 만들고 화면에 보여줄 template에 {{form.as_p}}처리만 해주면
+템플릿파일에 forms.py에서 만들었던 form이 처리되어 화면에 출력된다
+submit 버튼을 눌러 form을 제출했을 때 어떻게 처리 될지를 컨트롤 하기 위해서는 forms.py에서 forms.Form을 상속받은 class내에 def submitted(self, request): 형태로
+submitted 함수를 만들어 내용을 입력해주면 form이 제출되었을 때 어떻게 컨트롤 할지 정할수 있다.
+제출된 폼 데이터를 받아 새로운 url로 연결할 때는 reverse를 이용해야 한다.
+reverse('index')처럼 reverse(url주소)로 연결해줘야 제출된 폼이 올바르게 새로운 url로 연결되어 새로운 url화면을 보여줄수 있다.
+reverse가 오류가 발생할때가 있는데 이 때는 reverse_lazy(url주소)로 입력해주면 문제가 해결되서 url로 연결된다.
+reverse_lazy를 사용하는 경우는 다음과 같은데
+1. providing a reversed URL as the url attribute of a generic class-based view
+2. providing a reversed URL to a decorator (such as the login_url argument for the django.contrib.auth.decorators.permission_required() decorator).
+3. providing a reversed URL as a default value for a parameter in a function’s signature.
+여기서는 Formview를 이용하여 Form을 작성했으므로 1번에 해당한다.
+Formview는 generic class-based view이므로 여기서는 reverse_lazy를 통해 새로운 url로 연결해야 한다.
