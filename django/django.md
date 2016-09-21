@@ -269,3 +269,20 @@ reverse_lazy를 사용하는 경우는 다음과 같은데
 3. providing a reversed URL as a default value for a parameter in a function’s signature.
 여기서는 Formview를 이용하여 Form을 작성했으므로 1번에 해당한다.
 Formview는 generic class-based view이므로 여기서는 reverse_lazy를 통해 새로운 url로 연결해야 한다.
+
+html이 아닌 쟝고의 forms를 통해 form을 만들고 컨트롤 할지라도 행동을 취하기 위해서는 template안에 action을 입력해줘야 한다.
+action을 제대로 입력해주지 않으면 뒤에 method나 유저로부터 form을 입력받아 data를 처리하는등의 행위도 제대로 동작하지 않는다.
+반대로 action을 처리해주면 form내의 submitted를 따로 설정하지 않아도 form으로 입력받은 data가 자동으로 action으로 연결된 url로 전달되고
+입력받은 데이터를 가지고 자신이 원하는 처리를 하면 된다.
+쟝고에서 만든 폼을 이용해서 데이터를 받은 뒤 사용하기 위해서는 http를 이용해서 하듯이 단순히 request.POST를 이용해서 데이터를 받는것이 아니라
+form을 처리 할 클래스로 가져온뒤 cleaned_data를 이용해 데이터를 받아와야 한다.
+예를 들어
+
+    def post(self, request):
+        form = InputValueForm(request.POST)
+        if form.is_valid():
+            used_amount = form.cleaned_data['used_amount_field']
+            selected_currency = form.cleaned_data['select_currency_field']
+    
+이와같이 자신이 사용했던 폼을 request해서 class내에 변수로 가져온 뒤 폼의 유효성을 확인하고
+폼이 유효하다면 form.cleaned_data['필드변수이름']을 통해 자신이 입력받을 필드의 데이터를 가져올 수 있다.
