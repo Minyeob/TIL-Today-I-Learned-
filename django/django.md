@@ -243,3 +243,83 @@ filter를 이용해 구할 경우 type을 확인해보면 queryset으로 나오�
 따라서 둘을 비교하면 무조건 다르다는 결과만 출력하므로 서로 같은지 확인하기 위해서는
 두 데이터 타입이 같은 상태에서 비교해야 두 데이터가 같은지 비교 가능하다.
 
+
+###여러개의 데이터를 가지는 자료형비교
+여러개의 데이터를 가지고있는 자료형으로 list, tuple, dictionary 등이 있다.
+list는 a = [] 의 형태로 []괄호로 이루어져있고 tuple은 b = (2, 3)처럼 ()괄호안에 여러개의 데이터가 담겨있다.
+dictionary는 key와 value로 이루어져있는데 c={ 'int':1 } 처럼 {}괄호로 이루어져있고 안에 hash처럼 key와 해당하는 value로 이루어져있어
+찾을때 c['int']처럼 key값을 통해 검색을 하면 해당 key에 해당하는 value를 구할 수 있다.
+
+
+###쟝고 Form 클래스
+쟝고에서는 html에서 form을 컨트롤할 필요없이 Formview클래스와 forms.Form클래스를 상속해 쟝고내에서 폼을 만들고 컨트롤 가능하다
+템플릿에서 form을 만들어서 그 폼 데이터를 받아서 view에서 처리할 필요없이 view에서 Formview를 상속받고 화면에 보여질 template_name과
+성공했을때 보여질 success_url, 그리고 template서 form처리를 안하는 대신 화면에 보여줄 form_class를 입력해주면 폼 처리가 된 template이 화면에 보여진다.
+쟝고에서 폼을 만들때는 from django import forms를 해서 forms를 상속한 forms.py를 만들고 forms.Form을 상속한 class를 만든 뒤 그 클래스내에서
+forms.IntegerField나 forms.ChoiceField같이 forms 내에 있는 필드를 이용 해 폼 처리를 하고 싶은 내용을 만들고 화면에 보여줄 template에 {{form.as_p}}처리만 해주면
+템플릿파일에 forms.py에서 만들었던 form이 처리되어 화면에 출력된다
+submit 버튼을 눌러 form을 제출했을 때 어떻게 처리 될지를 컨트롤 하기 위해서는 forms.py에서 forms.Form을 상속받은 class내에 def submitted(self, request): 형태로
+submitted 함수를 만들어 내용을 입력해주면 form이 제출되었을 때 어떻게 컨트롤 할지 정할수 있다.
+제출된 폼 데이터를 받아 새로운 url로 연결할 때는 reverse를 이용해야 한다.
+연결할 url의 url주소는 모르지만 url name을 알고 있으므로 이 url name을 reverse함수를 이용하면 원하는 url로 연결할 수 있다.
+reverse('index')처럼 reverse(url주소)로 연결해줘야 제출된 폼이 올바르게 새로운 url로 연결되어 새로운 url화면을 보여줄수 있다.
+reverse가 오류가 발생할때가 있는데 이 때는 reverse_lazy(url주소)로 입력해주면 문제가 해결되서 url로 연결된다.
+reverse_lazy를 사용하는 경우는 다음과 같은데
+1. providing a reversed URL as the url attribute of a generic class-based view
+2. providing a reversed URL to a decorator (such as the login_url argument for the django.contrib.auth.decorators.permission_required() decorator).
+3. providing a reversed URL as a default value for a parameter in a function’s signature.
+여기서는 Formview를 이용하여 Form을 작성했으므로 1번에 해당한다.
+Formview는 generic class-based view이므로 여기서는 reverse_lazy를 통해 새로운 url로 연결해야 한다.
+
+html이 아닌 쟝고의 forms를 통해 form을 만들고 컨트롤 할지라도 행동을 취하기 위해서는 template안에 action을 입력해줘야 한다.
+action을 제대로 입력해주지 않으면 뒤에 method나 유저로부터 form을 입력받아 data를 처리하는등의 행위도 제대로 동작하지 않는다.
+반대로 action을 처리해주면 form내의 submitted를 따로 설정하지 않아도 form으로 입력받은 data가 자동으로 action으로 연결된 url로 전달되고
+입력받은 데이터를 가지고 자신이 원하는 처리를 하면 된다.
+쟝고에서 만든 폼을 이용해서 데이터를 받은 뒤 사용하기 위해서는 http를 이용해서 하듯이 단순히 request.POST를 이용해서 데이터를 받는것이 아니라
+form을 처리 할 클래스로 가져온뒤 cleaned_data를 이용해 데이터를 받아와야 한다.
+예를 들어
+
+    def post(self, request):
+        form = InputValueForm(request.POST)
+        if form.is_valid():
+            used_amount = form.cleaned_data['used_amount_field']
+            selected_currency = form.cleaned_data['select_currency_field']
+    
+이와같이 자신이 사용했던 폼을 request해서 class내에 변수로 가져온 뒤 폼의 유효성을 확인하고
+폼이 유효하다면 form.cleaned_data['필드변수이름']을 통해 자신이 입력받을 필드의 데이터를 가져올 수 있다.
+
+
+###다른 클래스에 정의된 내용 이용하기
+클래스내에 function이나 variable을 정의해놓고 다른 클래스내에서 가져다가 사용하기 위해서는
+자바에서 클래스 객체를 만들고 그 안의 내용을 호출하듯이 파이썬에서도 클래스를 이용해 객체를 만들고 그 안의 내용을 사용해야 한다.
+객체를 만들지 않고는 그 클래스 안의 내용을 참조할 수 없다.
+예를들어 base라는 class내의 function find를 사용하기 위해서는
+    a = base().find()   와 같이 사용해야 한다.
+단순히 클래스 내부의 내용을 참조하겠다고 a=base.find()처럼 function call을 하면 base객체가 만들어지지 않았으므로 클래스 내부의 내용을
+사용할 수 없다.
+
+
+###쟝고에서 한글 사용하기
+파이썬은 기본적으로 ASCII 인코딩을 사용한다
+ASCII로는 한글을 표현할 수 없기 때문에 다른 인코딩 방식을 사용해야 한다.
+Linux 환경에서 한글은 utf-8로 인코딩 되있다.
+쟝고에서 utf-8로 된 글자를 사용하기 위해서는 해당 문자가 사용되는 파이썬 문서 가장 위에
+    # -*- coding: utf-8 -*-  라고
+글자를 입력하면 해당 파일이 utf-8로 코딩되있음을 컴퓨터가 인식해 utf-8문자를 사용할 수 있다.
+
+   
+###파이썬3에서의 url open과 json load
+파이썬3에서는 모듈이나 함수등의 사용등이 바뀌었는데 urlopen도 바뀌었다.
+2에서는 해당 url의 자료를 받아오는 urlopen이나 url을 parsing 하는데 사용하는등의 함수가 모두 urllib2 모듈에 존재했는데
+파이썬3에서는 세분화되어서 url을 받아오는 urlopen은 urllib.request, urlparse는 urllib.parse등에 나누어서 저장되어있다.
+url에서 data를 받아오기 위해서는 urllib.request를 import하고 urllib.request.urlopen()을 통해 자료를 받아올 url에서 자료를 받고
+받아온자료를 read()하는것까지는 이전과 같다. 
+
+하지만 이 데이터가 json파일이라면 json을 python에서 사용하기 위해 파이썬2에서는 그냥 json을 import한 뒤 json.loads를 하면 되었지만 
+파이썬3에서는 json파일이 str형태이어야 load할 수 있다고 나오는데 urlopen과 read를 통해 받아온 데이터는 byte형태이므로 load가 불가하다.
+여기서 load를 하기 위해서는 byte파일을 decoding해서 string으로 바꾸고 load를 하면 되는데 간단히
+
+    recived_data = json.loads(url_str.decode('utf-8'))
+처럼 utf-8형식으로 decoding 한다거나 하면 json 파일을 load 할 수 있다. 
+
+
