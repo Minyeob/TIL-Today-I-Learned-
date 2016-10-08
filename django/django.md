@@ -308,3 +308,18 @@ Linux 환경에서 한글은 utf-8로 인코딩 되있다.
 글자를 입력하면 해당 파일이 utf-8로 코딩되있음을 컴퓨터가 인식해 utf-8문자를 사용할 수 있다.
 
    
+###파이썬3에서의 url open과 json load
+파이썬3에서는 모듈이나 함수등의 사용등이 바뀌었는데 urlopen도 바뀌었다.
+2에서는 해당 url의 자료를 받아오는 urlopen이나 url을 parsing 하는데 사용하는등의 함수가 모두 urllib2 모듈에 존재했는데
+파이썬3에서는 세분화되어서 url을 받아오는 urlopen은 urllib.request, urlparse는 urllib.parse등에 나누어서 저장되어있다.
+url에서 data를 받아오기 위해서는 urllib.request를 import하고 urllib.request.urlopen()을 통해 자료를 받아올 url에서 자료를 받고
+받아온자료를 read()하는것까지는 이전과 같다. 
+
+하지만 이 데이터가 json파일이라면 json을 python에서 사용하기 위해 파이썬2에서는 그냥 json을 import한 뒤 json.loads를 하면 되었지만 
+파이썬3에서는 json파일이 str형태이어야 load할 수 있다고 나오는데 urlopen과 read를 통해 받아온 데이터는 byte형태이므로 load가 불가하다.
+여기서 load를 하기 위해서는 byte파일을 decoding해서 string으로 바꾸고 load를 하면 되는데 간단히
+
+    recived_data = json.loads(url_str.decode('utf-8'))
+처럼 utf-8형식으로 decoding 한다거나 하면 json 파일을 load 할 수 있다. 
+
+
