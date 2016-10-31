@@ -200,3 +200,9 @@ client -> server -> 다른 client 형태로 서버를 통해 여러 client와 �
 활용하거나 출력할 수 있다.
 다른 언어에 scan한 내용을 변수에 저장하는것처럼 node에서도 키보드로 입력하면 process.stdin의 data 이벤트를 발생시키고
 그 이벤트에서 chunk라는 변수에 입력한 내용이 저장한다고 생각하면 된다.
+
+
+###폼처리
+폼 method를 get으로 주면 그걸 처리하는 컨트롤러 쪽에서는 query라는 이름으로 참조하고 post로 보내면 body라는 방식으로 참조한다.
+for(method='GET', action='')안에 input(id='test', name='ttt)라고 하면 그걸 처리하기 위해서는 app.query.test 형식으로
+qpp.method에 해당하는 처리 방법,input id 의 형식으로 받을 수 있다.
