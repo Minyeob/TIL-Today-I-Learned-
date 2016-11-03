@@ -200,3 +200,50 @@ client -> server -> 다른 client 형태로 서버를 통해 여러 client와 �
 활용하거나 출력할 수 있다.
 다른 언어에 scan한 내용을 변수에 저장하는것처럼 node에서도 키보드로 입력하면 process.stdin의 data 이벤트를 발생시키고
 그 이벤트에서 chunk라는 변수에 입력한 내용이 저장한다고 생각하면 된다.
+
+
+###폼처리
+폼 method를 get으로 주면 그걸 처리하는 컨트롤러 쪽에서는 query라는 이름으로 참조하고 post로 보내면 body라는 방식으로 참조한다.
+for(method='GET', action='')안에 input(id='test', name='ttt)라고 하면 그걸 처리하기 위해서는 app.query.ttt 형식으로
+qpp.method에 해당하는 처리 방법,input name 의 형식으로 받을 수 있다.
+javascript에서는 form에 입력된 값을 받아 올 때 name으로 각 값을 구별한다.
+name이 제출 되는 값들의 key값의 역활을 한다.
+input이 어떤 폼 아래에 기록되어 action과 method를 확인해 어디로 가고 어떻게 보내지는지 확인해야 하고
+각 input 값들이 어떤 name을 가지고 있어 그 값을 어떻게 받아와야 할지 확인하는것은 중요하다
+
+
+###jade
+jade는 javascript에서 사용하는 view 표현 방법 중 하나이다.
+모든 값들은 TAB으로 구별되고 괄호같은건 사용하지 않는다.
+앞의 값의 탭한 뒤 값이 해당 값의 value가 되어 사용된다.
+예를 들어 h1    kim 이라고 하면 html의 <h1>kim</h1>과 같다. 괄호 대신 TAB으로 구별하는 것이다.
+엔터 후에 밑 줄의 값도 TAB을 이용해 명령어의 뒤에 있다면 위의 명령어를 받는다
+
+     div#userinput
+        form(action='/remove', method='post')
+            p
+                input#input_1(type='text', name='input_1', placeholder="지우거나 바꾸고 싶은 텍스트를 입력하세요" )
+            p
+                input#input_2(type="text" placeholder="바꿀 텍스트를 입력하세요" name="input_2")
+            br
+            textarea(id="text_space" placeholder="전체 텍스트를 입력하세요" name='text_space')
+            p
+                input#submit(type='submit' value='Submit')
+                
+위 처럼 되어 있으면 userinput이라는 div 밑에 밑에 내용들이 포함되어 있고 각 p 밑에 밑줄의 내용들이 >p> 내용 </p> 형태로 포함되어 있다.
+그리고 input#input_1 처럼 값에 대한 클래스를 <h1 class=''> 처럼 글로 쓸 필요없이 #을 통해 바로 주거나 id도 .을 통해 p.name 의 형태로 바로 줄 수 있다.
+
+자바스크립트에서 넘겨준 변수를 사용하기 위해서는 jade에서 p=variable 처럼 html 태그에 그 태그안에 입력될 내용을 가진 변수를 입력하면 된다.
+위의 경우 <p>variable의 값</p> 의 html 내용과 같은 내용이 된다.
+그리고 일반 text를 입력하다가 변수의 내용을 중간에 넣기 위해서는 p    안녕하세요 #{variable}처럼 #{}안에 변수를 입력해주면 해당내용이 출력된다.
+그리고 html 태그가 포함된 값을 html에서 사용하는것 처럼 내용만 가져다가 사용하기 위해서는 !=을 이용하면 된다.
+jade에서 html태그가 포함된 html내용을 가져다 사용하기 위해 != 을 이용하는데 !=을 이용하면 <>태그들이 text가 되지 않고 해당 html 태그에 맞게 사용된다.
+
+
+###문자열
+javascript에서는 문자열 처리를 String object에 대해 지원하는 여러가지 함수를 통해 처리할 수 있다.
+그 중 많은 수의 함수들은 인자(parameter)로 Regexp를 받는데 Regexp는 정규표현식이다.
+js에서는 new Regexp(문자열, attribute)의 형태로 정규표현식을 만들 수 있는데 문자열은 정규표현식으로 바꿀 문자열, 뒤의 attribute는
+해당 정규표현식이 전역에 걸쳐 영향을 미칠지, 대,소문자를 구별할 지 않을지, 여러 줄 매치 등을 의미하는데 많이 사용할 수 있는 전역 선언은 'g'를 이용해 선언한다.
+str.replace(new Regexp('abcd', 'g'),'')의 형태로 문자열 함수가 사용될 때 정규식이 정규식이 사용되는 대상의 전역에서 사용된다는 의미로
+여기서는 str 문자열 전체에 정규표현식이 replace의 상대로 사용된다는 의미이다.
