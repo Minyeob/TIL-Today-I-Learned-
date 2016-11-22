@@ -257,3 +257,17 @@ jQuery(제이쿼리)는 브라우저 호환성이 있는 HTML 속 자바스크�
 jade안에서 사용하기 위해서는 body 안에서 script. 을 적고 그 안에 코드를 작성해서 사용할 수 있다.
 명심해야 할점은 script 뒤에 .이 꼭 붙어야 한다.
 
+
+###AWS에서 node 동작시키기
+aws 계정과 인스턴스를 만들고 해당 인스턴스에 접속이 가능하다면 위에 node로 코딩해서 웹 서버를 만들 수 있다.
+sudo apt-get install nodejs를 통해 node를 설치하면 노드가 사용 가능하고 똑같이 install 명령어로 npm을 설치한다면 마찬가지로 npm이 사용가능하다.
+http 서버를 만들어 사용할 것이 아니라 express를 이용하려면 express도 설치해야 한다.
+express는 npm을 통해 설치가 가능하므로  sudo npm install -g express 명령어를 통해 설치할 수 있다.
+express를 설치했다면 express -e 명령어로 기본 express 프로젝트를 시작할 수 있다.
+그리고 sudo npm install 을 입력한다면 기본적으로 package.json 에 입력되어있는 node module 파일들을 설치해
+node 프로젝트를 시작할 수 있도록 한다.
+그리고 사용하기 위해서는 app.js 로 들어가 app.set을 통해 http server나 port를 연결해 외부에서 접속이 가능하도록 해야한다.
+그리고 project 폴더로 들어가 npm start를 실행하면 node 를 실행해 브라우저를 통해 접속이 가능하다.
+컴퓨터를 켜놓지 않고도 aws에서 항상 해당 node project가 실행되기 위해서는
+nohup npm start 명령어로 nohup 을 포함해서 실행하면 aws 내에서 항상 백그라운드로 node가 실행되
+컴퓨터를 켜지 않아도 해당 ip에 대해 접속이 가능하다.
