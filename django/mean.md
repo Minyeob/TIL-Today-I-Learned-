@@ -45,8 +45,23 @@ emit()는 emit함수가 실행 된 결과값을 입력하는 것이다.
 while 반복문은 다른 언어와 같은데 파라미터로 들어간 조건이 유효할때까지 계속 반복된다.
 while(1)이면 무한반복 되는것이다.
 일반적인 for문은 c언어에서 사용하는것과 같이 for(i=0;i<10;i++)처럼 시작조건,완료조건,변화문 의 형태로 구성된다.
-for in은 파이썬이나 자바에서 쓰는것처럼 for object in list 의 형태로 특정 배열이나 리스트등에 있는
-객체를 순서대로 모두 반복한다.
+for in은 for(i in array)의 형태로 사용된다.
+
+    for(i in array)
+    {
+        console.log(array[i]
+    }
+처럼 사용된다.
+파이썬이나 자바에서 사용하는것처럼 i 가 array라는 배열의 각 value에 해당하는것이 아니라 array라는 배열의 index 값으로 i가 사용된다.
+일반적인 for문과 비슷한데 반복문의 횟수를 정해줄 필요 없이 for 문을 사용하면 된다라고 생각하면 된다.
+파이썬이나 자바의 for in 처럼 사용되는것은 array.foreach 가 있다.
+    
+    docs.forEach(function (doc) {
+        print=print+JSON.stringify(doc);
+      })
+여기서는 docs라는 배열의 각 원소값이 doc이 되어 함수안의 코드를 실행한다.
+javascript에서는 for in 보다 for each를 사용하는것이 좋을것 같다.
+
 
 ###배열
 자바스크립트에는 배열이 c언어나 자바처럼 일반적으로 만들어서 배열에 대한 주소에 저장하거나 특정 주소에 들어있는
@@ -271,3 +286,94 @@ node 프로젝트를 시작할 수 있도록 한다.
 컴퓨터를 켜놓지 않고도 aws에서 항상 해당 node project가 실행되기 위해서는
 nohup npm start 명령어로 nohup 을 포함해서 실행하면 aws 내에서 항상 백그라운드로 node가 실행되
 컴퓨터를 켜지 않아도 해당 ip에 대해 접속이 가능하다.
+
+
+###Session
+node js에서 session은 'express-session' 모듈을 load함으로써 다룰 수 있다.
+session을 만들기 위해서는 반드시
+
+    app.use(session({
+      secret: 'keyboard cat',
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7
+      },
+      store: store,
+      resave: false,
+      saveUninitialized: true
+    }));
+    
+처럼 session에 secret값을 넣어줘야 한다. store는 저장될 공간이고 resave는 session이 modify 되지 않아도 다시 저장한다는 의미이고
+saveUninitialized 는 session이 만들어진뒤, modify되지 않아도 자동으로 저장된다는 의미이다. 
+이런건 모두 optional 하지만 secret은 session id를 암호화하는데 사용한다. secret에는 문장 또는 문장으로 이루어진 배열을 사용하는데
+이 문장이 해쉬 함수를 통해 암호화되어 id가 되고 해당 id를 해쉬 함수를 통해 다시 해석했을때 해당 secret과 같다면 같은 session임을 알 수 있다.
+위의 설정은 반드시 routing 설정을 하기 전에 해줘야 한다. 즉 app.js 에서 해당 주소에 대한 control을 하기 전에 반드시 미리 처리를 해야 session에 대해 사용할 수 있다.
+session은 json object로 되어 있다.
+
+
+
+###JSON
+JSON 형태의 데이터는 JSON.stringify(json data)의 형태로 문자열로 바꿀 수 있다.
+data 라는 이름의 json object가 있다고 하면 JSON.stringify(data)를 통해 json object를 json 문자열로 바꾸는것이다.
+json 문자열은 파이썬의 dictionary형태와 같다고 보면 된다.
+json의 원하는 키에 대해서만 변환시키기 위해서는 stringify의 두 번째 파라미터인 replacer 함수를 사용해 원하는 옵션을 줘서 바꿀수도 있다.
+
+    function replacer(key, value) {
+      if (typeof value === "string") {
+        return undefined;
+      }
+      return value;
+    }
+    
+    var foo = {foundation: "Mozilla", model: "box", week: 45, transport: "car", month: 7};
+    var jsonString = JSON.stringify(foo, replacer);    
+처럼 한다면 jsonString의 값으로는 {"week":45,"month":7} 가 된다.
+replace함수에서 value가 string type이면 undefined를 return 하도록 했고 undefined를 return 하면 null 값이 되어 변환되지 않는다.
+
+    JSON.stringify(foo, ['week', 'month']);  
+    // '{"week":45,"month":7}', only keep "week" and "month" properties
+처럼 배열을 이용해 원하는 key값만 간단히 문자열화 시킬 수도 있다.
+위처럼 하면 foo라는 json 파일에서 week라는 key값과 month라는 key의 key와 value만 문자열화 된다.
+
+JSON.parse 를 이용하면 json 문자열을 다시 object로 만들 수 있다.
+Json object에서 자신이 찾는 key에 대한 value를 구하기 위해서는 json object.key 값의 형태로 foo.foundation 처럼 사용하면 foo 라는 json object의
+foundation key값에 해당하는 value를 구할 수 있다.
+문자열로 변환시키면 원하는 값에 대해 찾을 수 없고 오브젝트 상태일때만 원하는 key값에 대한 정보만을 찾을 수 있다.
+console.log로 console창에는 object의 값도 볼 수 있지만 html에는 object의 값은 나타낼 수 없고 문자열로 바꿔서 출력해줘야 한다.
+
+
+###Assert
+Assert는 유닛 테스트를 위해서 Node.js에서 사용할 수 있는 테스트 모듈이다. 별도의 설치없이도 import하면 바로 사용할 수 있다.
+var assert = require('assert'); 처럼 import 해서 assertion을 이용하면 된다.
+assert()는 인자로 넘어온 값이 true랑 같은 지 비교한 후, 같지 않으면 에러를 발생시킨다.
+assert.ok()는 assert()와 똑같이 사용된다.
+assert.iferror는 반대로 인자로 넘어온 값이 false랑 같은 지 비교 후, 넘어온 값이 true 라면 error를 발생시킨다.
+equal()과 notEqual()은 인자를 두 개 넘겨서 비교할 수 있는 메소드이다.
+assert.equal(a,b) , assert.notequal(a,b) 처럼 사용되는데 equal은 a==b를 해서 a와 b가 같은지 비교 해, 같지 않으면 에러를 발생시킨다.
+notequal은 a!=b 를 해서 같지 않은 지 비교해, 같다면 에러를 발생시킨다.
+==나 != 를 이용해 비교하므로 강제형변환을 사용하므로 정확한 결과가 나오지 않을 수도 있다.
+strictEqual()과 notStrictEqual()은 Identity 연산자로 비교한다.
+equal()이나 notequal()이랑 사용방법은 똑같이 assert.strictequal(a,b) 나 assert.strictnotequal(a,b)를 사용하는데
+=== 나 !== 을 이용하므로 조금 더 명확한 비교가 가능하다.
+
+
+###==와 ===의 차이
+그동안 다른 언어에서 비교를 할 때 ==를 사용했다.
+javascript에서도 마찬가지로 ==를 사용하는데 javascript에서 ==를 사용하면 연산이 되기 전에 피연산자들을 먼저 비교할 수 있는 형태로 변환시키고 비교한다.
+    
+    254 == '254'                // return true
+    true == 1                   // return true
+    undefined == null           // return true
+    'abc' == new String('abc')  // return true
+    null == false               // return false
+    'true' == true              // return false
+    true == 2                   // return false
+따라서 다음과 같은 결과를 출력한다.
+true가 나와서는 안되는 값들도 true가 나오는것이다. 정확한 비교가 안 될때도 있다.
+하지만 ===와 !==는 Identity 연산자이다. 이 녀석은 ==와는 반대로 형변환을 하지 않고 연산한다.
+
+    254 === '254'               // return false
+    true === 1                  // return false
+    undefined === null          // return false
+    'abc' === new String('abc') // return false
+따라서 다음과 같은 결과를 출력한다.
+javascript에서 좀 더 정확한 비교를 하기 위해서는 ===나 !==를 사용하는것이 좋겠다.
