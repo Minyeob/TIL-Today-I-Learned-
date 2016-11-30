@@ -377,3 +377,17 @@ true가 나와서는 안되는 값들도 true가 나오는것이다. 정확한 �
     'abc' === new String('abc') // return false
 따라서 다음과 같은 결과를 출력한다.
 javascript에서 좀 더 정확한 비교를 하기 위해서는 ===나 !==를 사용하는것이 좋겠다.
+
+
+###MongoDB
+MongoDB는 no sql database로 node js 에서 데이터베이스로 가장 일반적으로 사용된다.
+각 데이터에 대해 key:value 의 json 형태로 document로 db에 저장된다.
+document 는 여러 데이터를 저장한 일종의 하나의 tuple 이라고 보면 된다.
+$in 을 이용하면 앞의 key 값의 value로 [] array 안에 포함된 어떠한 값이라도 매칭되는 document를 find 한다
+
+    db.bios.find(
+       {
+          _id: { $in: [ 5,  ObjectId("507c35dd8fada716c89d0013") ] }
+       }
+    )
+예를 들어 위 같은 코드가 있으면 db의 bios라는 collection 에서 _id가 5이거나 위의 object id 인 모든 document를 찾는다.
