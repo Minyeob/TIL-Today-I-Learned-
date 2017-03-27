@@ -334,3 +334,34 @@ try 부분에 문제가 생길것 같은 부분을 코딩하고 except 부분에
 예외가 발생하지 않고 정상적으로 실행될 부분은 else밑에 적으면 된다.
 그리고 예외가 발생하던 안하던 상관없이 마지막에 실행될 부분은 finally 밑에 적어 무조건 실행될 부분을 적으면 된다.
 
+###static file
+쟝고에서는 파이썬 코드나 html 파일이외에 image 나 css, javascript 등의 파일을 처리하기 위해서 static file을 이용한다.
+static file은 쟝고 서버에 해당 파일을 사용한다고 알려준뒤 static 파일을 load 하겠다고 html 내에서 선언하고 사용해야 한다.
+
+    STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+    STATIC_URL = '/static/'
+    STATICFILES_DIRS = (
+        os.path.join(BASE_DIR, 'static'),
+    )
+위의 형태로 settings.py 에 선언을 하면 settings.py 에 선언해줘야 할 static file 관련 선언은 다 한것이다.
+static url은 웹 페이지에서 사용할 static 파일의 최상위 URL 경로이다.
+상위 경로 자체는 실제 파일이나 디렉터리가 아니며, URL로만 존재하는 단위이다.
+django에서 인식된 static file들은 홈페이지 메인주소/static/ ~하부경로 의 형태로 참조할 수 있다.
+http://127.0.0.1:8000/static/img/city-bg.jpg 처럼 url을 입력하면 해당 경로의 static file을 열어볼 수 있다.
+STATIC_URL은 정적 파일이 실제 위치한 경로를 참조하며, 이 실제 경로는 STATICFILES_DIRS 설정 항목에 지정된 경로가 아닌 STATIC_ROOT 설정 항목에 지정된 경로이다.
+STATIC_ROOT는 Django 프로젝트에서 사용하는 모든 정적 파일을 한 곳에 모아넣는 경로이다. 
+한 곳에 모으는 기능은 manage.py 파일의 collectstatic 명령어로 수행한다.(python manage.py collectstatic)
+해당 명령어는 각 Django 앱 디렉터리에 있는 static 디렉터리와 STATICFILES_DIRS에 지정된 경로에 있는 모든 파일을 모은다.
+주의할 점. STATIC_ROOT 경로는 STATICFILES_DIRS 등록된 경로와 같은 경로가 있어서는 안 된다. 남들이 잘 안 쓸만한 이상한 이름(staticfiles?)을 써야한다.
+django project 내의 각 app에서 static file을 이용하기 위해서는 각 app 밑에 static 폴더를 만들어서 static file들을 저장한 뒤
+collectstatic 명령어를 통해 해당 static file을 쟝고에 인식시키고
+
+     {% load staticfiles %}
+     <script src="{% static "js/jquery-1.11.3.min.js" %}"></script>
+     <script src="{% static "js/bootstrap.min.js" %}"></script>             
+     <script src="{% static "js/hero-slider-main.js" %}"></script>         
+     <script src="{% static "js/jquery.magnific-popup.min.js" %}"></script> 
+     
+ 처럼 html 페이지 내에서 불러서 사용하면 된다.
+ 
+ 자세한 내용은 http://blog.hannal.com/2015/04/start_with_django_webframework_06/  참조하면 된다.
