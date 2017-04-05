@@ -365,3 +365,17 @@ collectstatic 명령어를 통해 해당 static file을 쟝고에 인식시키�
  처럼 html 페이지 내에서 불러서 사용하면 된다.
  
  자세한 내용은 http://blog.hannal.com/2015/04/start_with_django_webframework_06/  참조하면 된다.
+ 
+ 
+ ###URL Encode
+ chrome 이나 edge 같은 최신의 브라우저들은 url에 utf-8 문자가 포함되어 있는 것을 허용해
+ utf-8을 이용한 url이 사용가능하지만 explorer에서는 utf-8 문자를 url에 사용할 수 없다.
+ utf-8 문자가 url에 포함되어 있다면 explorer에서는 해당 문자를 제대로 읽어올 수 없다. 
+ Explorer에서 utf-8 문자를 포함한 url을 사용하기 위해서는 해당 문자를 urlencoding 해줘야 한다.
+ view에서 보내는 문자라면 python의 urlencode 함수를 통해 encoding을 한 뒤 template으로 보내면 되고
+ template내에서 utf-8 문자를 urlencode 하기 위해서는 문자 | urlencode 의 형태로 encoding 해줘야 한다.
+ 예를들어
+    
+    <a href="/ibk/page/{{ normal_code }}?title={{ file.title|urlencode }}">
+위의 코드에서 view에서 넘겨받은 file.title이라는 utf-8로 코딩되어있는 문자열을 |urlencode 처리 해줌으로
+해당 url의 해당 문자가 encoding 되어서 explorer에서도 사용 가능하게 된다.
