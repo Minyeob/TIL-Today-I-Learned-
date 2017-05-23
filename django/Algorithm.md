@@ -177,3 +177,28 @@ dfs(){
 }
 형태로 정의된다.
 
+###next_permutation
+algorithm class에 있는 함수  ,   next_permutation(first,last)의 형태
+
+next_permutation을 실행하면 first부터 last까지 현재 수의 조합부터 
+내림차순으로 permutation을 수행한다
+next_permutation(start,end) 범위에 있는 원소들의 다음으로 큰 사전식 
+순열 생성 - 사전의 형태로 현재보다 사전의 뒤에 있는 경우의 
+따라서 next_permutation으로 모든 경우의 수를 확인하기 위해서는 sort를 
+통해 오름차순으로 순서를 바꾼 뒤 수행하면 모든 경우의 수를 확인할 수 있다.
+
+    do {
+    		int sum = 0;
+    		for (int i = 0; i < n-1; i++)
+    		{
+    			sum += abs(input[i] - input[i + 1]);
+    		}
+    		if (sum > max)
+    			max = sum;
+    	} while (next_permutation(input, input + n));
+next_permutation을 통해 모든 경우의 수를 확인할 때는 반드시
+위의 코드처럼 do{ ~ } while()의 형태로 사용해야 한다.
+while(next_permutation)의 형태가 되면 처음 경우의 수를 확인하지 않고
+permutation을 수행한 뒤 그 다음 경우의 수부터 실행되므로 한가지 경우의
+수를 건너뛰게 된다.
+따라서 반드시 위의 코드처럼 do ~ while() 형태로 사용해야 한다.
