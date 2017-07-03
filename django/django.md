@@ -379,3 +379,25 @@ collectstatic 명령어를 통해 해당 static file을 쟝고에 인식시키�
     <a href="/ibk/page/{{ normal_code }}?title={{ file.title|urlencode }}">
 위의 코드에서 view에서 넘겨받은 file.title이라는 utf-8로 코딩되어있는 문자열을 |urlencode 처리 해줌으로
 해당 url의 해당 문자가 encoding 되어서 explorer에서도 사용 가능하게 된다.
+
+
+###Python 기본 변수형, 문자열처리
+파이썬 3에서는 int 범위를 넘어가는 정수도 type int로 취급한다
+즉 int 범위를 넘어가도 계산이 가능하다
+map() 함수는 built-in 함수로 list 나 dictionary 와 같은 iterable 한 데이터를 인자로 받아 list 안의 개별 item을 함수의 인자로 전달하여 결과를 list로 형태로 반환해 주는 함수이다
+
+    def func(x):
+    return x * 2
+    >>> map( func, [1, 2, 3, 4] )
+    [2, 4, 6, 8]
+와 같은 형태로 map을 이용할 경우 list의 두 번째 파라미터로 입력된 list의 각 원소에
+대하여 첫 번째 파라미터의 함수를 적용한 값을 가지게 된다
+
+    first, second=map(int, input().split())
+와 같은 형태일 경우 input.split()을 통해 list로 나뉘어진 list의 각 원소에
+대해 각 list 원소 값인 string을 int로 바꿔 first, second 변수에 할당하게 된다.
+
+파이썬에서는 문자열의 원소를 index 위치를 이용하여 직접 바꾸는것이 허용되지 않는다.
+replace 함수나 문자열을 부분집합으로 나누고 앞 뒤 부분집합값에 문자를 더하는 형태로
+문자열을 바꿔줘야 한다.
+기본적으로 input을 이용하여 사용자 입력을 받으면 문자열의 형태이다.
