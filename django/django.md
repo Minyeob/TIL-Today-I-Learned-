@@ -30,22 +30,25 @@ json은 웹프레임에서 많이 쓰는 형태로 string:string 의 형태로 k
 dictionary와 json형태로 서로 바꿀 수 있다.
 
 json -> dict 는 다음과 같이 구현 가능하다
-import json
-json_data = '{"hello": "world", "foo": "bar"}' 
-data = json.loads(json_data)
+    
+    import json
+    json_data = '{"hello": "world", "foo": "bar"}' 
+    data = json.loads(json_data)
 
 dict -> json 은 다음과 같다
-import json
-data = {'baz': 'goo', 'foo': 'bar'}
-json_data = json.dumps(data)
+
+    import json
+    data = {'baz': 'goo', 'foo': 'bar'}
+    json_data = json.dumps(data)
 
 dict -> json 으로 바꿔 http형태로 response할 수도 있다
-import json
-from django.http import HttpResponse
 
-def fbview(request):
-    data = {'foo': 'bar', 'hello': 'world'}
-    return HttpResponse(json.dumps(data), content_type='application/json')
+    import json
+    from django.http import HttpResponse
+
+    def fbview(request):
+        data = {'foo': 'bar', 'hello': 'world'}
+        return HttpResponse(json.dumps(data), content_type='application/json')
 
 이거는 서버를 구현 할때 클라이언트가 data에 대해 요청을 한다면 dictionary형태로 구현되어 있는 data를 json형태로 바꿔 http형태로 response 해 줄 수 있다.
 
@@ -244,14 +247,14 @@ filter를 이용해 구할 경우 type을 확인해보면 queryset으로 나오�
 두 데이터 타입이 같은 상태에서 비교해야 두 데이터가 같은지 비교 가능하다.
 
 
-###여러개의 데이터를 가지는 자료형비교
+### 여러개의 데이터를 가지는 자료형비교
 여러개의 데이터를 가지고있는 자료형으로 list, tuple, dictionary 등이 있다.
 list는 a = [] 의 형태로 []괄호로 이루어져있고 tuple은 b = (2, 3)처럼 ()괄호안에 여러개의 데이터가 담겨있다.
 dictionary는 key와 value로 이루어져있는데 c={ 'int':1 } 처럼 {}괄호로 이루어져있고 안에 hash처럼 key와 해당하는 value로 이루어져있어
 찾을때 c['int']처럼 key값을 통해 검색을 하면 해당 key에 해당하는 value를 구할 수 있다.
 
 
-###쟝고 Form 클래스
+### 쟝고 Form 클래스
 쟝고에서는 html에서 form을 컨트롤할 필요없이 Formview클래스와 forms.Form클래스를 상속해 쟝고내에서 폼을 만들고 컨트롤 가능하다
 템플릿에서 form을 만들어서 그 폼 데이터를 받아서 view에서 처리할 필요없이 view에서 Formview를 상속받고 화면에 보여질 template_name과
 성공했을때 보여질 success_url, 그리고 template서 form처리를 안하는 대신 화면에 보여줄 form_class를 입력해주면 폼 처리가 된 template이 화면에 보여진다.
@@ -348,12 +351,16 @@ static url은 웹 페이지에서 사용할 static 파일의 최상위 URL 경�
 상위 경로 자체는 실제 파일이나 디렉터리가 아니며, URL로만 존재하는 단위이다.
 django에서 인식된 static file들은 홈페이지 메인주소/static/ ~하부경로 의 형태로 참조할 수 있다.
 http://127.0.0.1:8000/static/img/city-bg.jpg 처럼 url을 입력하면 해당 경로의 static file을 열어볼 수 있다.
-STATIC_URL은 정적 파일이 실제 위치한 경로를 참조하며, 이 실제 경로는 STATICFILES_DIRS 설정 항목에 지정된 경로가 아닌 STATIC_ROOT 설정 항목에 지정된 경로이다.
+STATICFILES_DIRS는 웹사이트 개발에 사용될 static file들이 저장되어 있는 경로를 의미한다.
+사용할 static file들이 저장되어 있는 경로를 STATICFILES_DIRS에 기록해주면 된다.
 STATIC_ROOT는 Django 프로젝트에서 사용하는 모든 정적 파일을 한 곳에 모아넣는 경로이다. 
 한 곳에 모으는 기능은 manage.py 파일의 collectstatic 명령어로 수행한다.(python manage.py collectstatic)
 해당 명령어는 각 Django 앱 디렉터리에 있는 static 디렉터리와 STATICFILES_DIRS에 지정된 경로에 있는 모든 파일을 모은다.
-주의할 점. STATIC_ROOT 경로는 STATICFILES_DIRS 등록된 경로와 같은 경로가 있어서는 안 된다. 남들이 잘 안 쓸만한 이상한 이름(staticfiles?)을 써야한다.
-django project 내의 각 app에서 static file을 이용하기 위해서는 각 app 밑에 static 폴더를 만들어서 static file들을 저장한 뒤
+이렇게 정적 파일을 모아놓은 STATIC_ROOT는 Django가 직접 접근하지는 않는다. 
+Django가 접근하여 다루는 설정은 STATICFILES_DIRS이며, STATIC_ROOT는 정적 파일을 직접 제공(serving)할 웹 서버가 접근한다.
+주의할 점. STATIC_ROOT 경로는 STATICFILES_DIRS에 등록된 경로와 같은 경로가 있어서는 안 된다. 
+남들이 잘 안 쓸만한 이상한 이름(staticfiles?)을 써야한다.
+django project 내의 사용할 static file들이 저장되어 있는 위치를  STATICFILES_DIRS에 추가해준뒤, 
 collectstatic 명령어를 통해 해당 static file을 쟝고에 인식시키고
 
      {% load staticfiles %}
@@ -401,3 +408,24 @@ map() 함수는 built-in 함수로 list 나 dictionary 와 같은 iterable 한 �
 replace 함수나 문자열을 부분집합으로 나누고 앞 뒤 부분집합값에 문자를 더하는 형태로
 문자열을 바꿔줘야 한다.
 기본적으로 input을 이용하여 사용자 입력을 받으면 문자열의 형태이다.
+
+파이썬에서는 값이 공백으로 구분되있는 형태의 줄을 입력받을 때 c++처럼
+%d나 %c를 통해 구분하여 받는것이 불가능하다
+
+    arr=input().split()
+형태로 입력받으면 자동으로 arr라는 변수가 나뉘어서 list형태로 각 공백기준으로
+나뉜 값들이 arr의 각원소로 입력된다.
+배열을 따로 만들어주지 않아도 자동으로 배열의 형태로 사용이 가능하다.
+
+파이썬에서는 전역변수로 미리 선언을 해놓고 시작하지 않으므로 배열을 선언하기
+위해서는 코드내에서 선언해줘야 한다.
+nxn 배열의 2차원 배열은 다음과 같이 선언하면 된다.
+
+    result = [[0 for col in range(n)] for row in range(n)]
+
+
+Python에서 유저의 입력을 받는 방법으로 input과 sys.stdin.readline등이 있는데
+input은 굉장히 느리다.
+sys.stdin.readline()을 이용하는게 훨씬 빠르다.
+같은 알고리즘문제에 대하여 하나는 input을 이용하고 하나는 sys.stdin.readline을
+사용한 결과 input은 시간초과가 발생하였다.
