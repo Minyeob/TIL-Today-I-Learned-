@@ -505,7 +505,25 @@ method 정의된 클래스의 내용에 따라 작업을 하고 싶다면 @stati
 국제표준화기구(ISO)에서 개발한 모델로, 컴퓨터 네트워크 프로토콜 디자인과 통신을
 7개의 계층으로 나누어 설명한 모델을 말한다
 
+### 운영체제의 부팅과정
+1. 전원 ON
+2. 메인보드의 ROM-BIOS에 있는 BIOS 프로그램 실행
+    - 하드웨어 오류 검사 (POST: Power-On Self Test)
+    - 부팅매체 탐색
+    - 1차 Boot loader 로딩 [Boot loader를 메모리(RAM)에 적재]
+        - 주하드디스크(첫 번째 부팅 장치 HDD)의 첫 번째 섹터인 MBR(Master Boot Record)의 
+        내용을 메모리(RAM)에 로딩한 로딩한 후 제어권을 넘깁니다. 일반적으로 512byte에 
+        Boot loader 코드를 모두 적재하기 힘들기 때문에 기본적으로 필요한 부분만 MBR에 
+        저장하고, 이를 통해서 2차 Boot loader를 호출합니다 .
+3. 프로세서(CPU)가 Boot loader 코드 실행
+4. 해당 운영체제의 2차 Boot loader 로딩 및 실행
+5. Kernel 로딩
+6. 프로세서(CPU)가 Kernel 실행
 
+    - 초기화 및 시스템 설정
+    - ID 1번 프로세스(초기화 프로세스) 실행
+7. 하드웨어나 소프트웨어 Interrupt 발생을 기다림
+8. OS 동작
 
 
 
